@@ -50,6 +50,15 @@ var particle = {
     grav.setAngle(this.angleTo(p2));
 
     this.velocity.addTo(grav);
+  },
+  isbounded: function(boundary){
+    if 
+    (this.position.getX() > boundary.xmax ||
+    this.position.getX() < boundary.xmin ||
+    this.position.getY() > boundary.ymax ||
+    this.position.getY() < boundary.ymin){
+     return true;
+    }
+    return false;
   }
-
 }
