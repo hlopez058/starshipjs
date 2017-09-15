@@ -4,16 +4,21 @@ var ship = {
   color:null,
   hittest:false,
   visible:true,
+  fragments:null,
+  blasts:null,
   boundary:null,
+  exploded:null,
+  hp:0,
   thruster:{on:false,left:false,right:false},
   weapon:{trigger:false,
           fired:[],
-          ammo:100,
+          max_ammo:100,
+          ammo:0,
           rate_of_fire:9,
           cooldown:0,
           bullet_size:3,
           bullet_mass:1,
-          bullet_color:pallete.Black,
+          bullet_color:pallete.Red,
           bullet_speed:5,
           fire: function(boundary,x,y,direction)
           {
@@ -23,7 +28,7 @@ var ship = {
             }else{
               this.cooldown = this.rate_of_fire;
               //fire bullet
-              if(this.fired.length <= this.ammo){
+              if(this.fired.length < this.max_ammo){
                 //create a new bullet and add to fired
                 //bounds,x,y,speed,direction,size,mass,color
                 var b = bullet
@@ -37,6 +42,7 @@ var ship = {
                     this.bullet_color);
                 this.fired[this.fired.length]= b;
               }
+              this.ammo = this.max_ammo - this.fired.length ;
             }
           },
         },
@@ -49,6 +55,14 @@ var ship = {
     obj.particle = p;
     obj.size = size;
     obj.color = color|pallete.White;
+    var frags = [];
+    var numOfFrags = getRandomIntInclusive(size/2,2*size);
+    for(i=0;i<numOfFrags;i++){
+      frags[i] = particle.create(x,y,0,0);
+    }
+    obj.fragments = frags;
+    obj.blasts = [];
+    this.weapon.ammo = this.weapon.max_ammo;
     return obj;
   },
 
@@ -68,6 +82,31 @@ var ship = {
     this.weapon.trigger = controller.keySpace;
   },
 
+  setHP: function(val){
+    this.hp = val;
+  },
+
+  explode: function(){
+    if(!this.exploded){
+      //create blast vectors for fragments
+      for(i=0;i<this.fragments.length;i++){
+        //create a blast vector
+        var direction = getRandomFloatInclusive(1,2*Math.PI);
+        var speed = getRandomFloatInclusive(.3,.5);
+        var blast = vector.create(0,0);
+        blast.setLength(speed);
+        blast.setAngle(direction);
+        this.blasts[i]=blast;
+      }
+      this.visible=false;
+      this.exploded = true;
+      this.setMass(0);
+    }
+
+  },
+
+
+
   update: function(){
 
     if(this.thruster.left){
@@ -85,10 +124,9 @@ var ship = {
         this.particle.rotation
       );
     }
-
     //create a thrust vector
     var thrust = vector.create(this.particle.position.getX(),
-                               this.particle.position.getY());
+                              this.particle.position.getY());
     thrust.setAngle(this.particle.rotation);
 
     if(this.thruster.on){
@@ -102,6 +140,25 @@ var ship = {
     
     //reposition so borders wrap
     this.wrapborder();
+  
+      //update explosion
+    if(this.exploded){
+      for(i=0;i<this.fragments.length;i++){
+        //check if fragments are still in view
+        if( this.fragments[i].position.getX()>this.boundary.xmin &
+            this.fragments[i].position.getX()<this.boundary.xmax &
+            this.fragments[i].position.getY()>this.boundary.ymin &
+            this.fragments[i].position.getY()<this.boundary.ymax)
+          {
+            this.fragments[i].position.setX(this.particle.position.getX());
+            this.fragments[i].position.setY(this.particle.position.getY());
+            this.fragments[i].velocity.addTo(this.blasts[i]);
+            this.fragments[i].update();
+          }else{
+            this.fragments[i].hidden = true;
+          }
+      }
+    }  
   },
 
   wrapborder : function(){
@@ -120,20 +177,38 @@ var ship = {
   },
 
   draw: function(context){
+    var s = 5;//scalar
     //draw ship outline
     context.save();
     context.translate(this.particle.position.getX(),
                         this.particle.position.getY());
     context.rotate(this.particle.rotation);
     context.beginPath();
-    context.fillStyle = this.color;
-    context.moveTo(10, 0);
-    context.lineTo(-10, -7);
-    context.lineTo(-10, 7);
-    context.lineTo(10, 0);
-    context.moveTo(-10,0);
-    context.lineTo(10, 0);
-    context.fill()
+    context.fillStyle = pallete.Gray;
+
+    //wings
+    context.moveTo(s*10, 0);
+    context.lineTo(s*-11, s*-6);
+    context.lineTo(s*-11, s*6);
+    context.lineTo(s*10, 0);
+    
+    context.moveTo(s*10, 0);
+    context.lineTo(s*-10, s*-4);
+    context.lineTo(s*-10, s*4);
+    context.lineTo(s*10, 0);
+    context.fill();
+    
+    context.moveTo(s*10, 0);
+    context.lineTo(s*-10, s*-3);
+    context.lineTo(s*-10, s*3);
+    context.lineTo(s*10, 0);
+    
+
+    //fuselouge
+    context.moveTo(s*-10,0);
+    context.lineTo(s*10, 0);
+    
+    context.fill();
     context.stroke();
     
     if(this.thruster.on) {

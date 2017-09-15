@@ -61,6 +61,16 @@ var planet = {
   },
 
   update: function(){
+    //reposition so borders wrap
+    this.wrapborder();
+    
+    //movement limiter to keep planets from 
+    //ejecting across the screen because of
+    //gravitational effects.
+    if(this.particle.velocity.getLength() >20){
+      this.particle.velocity.setLength(20);
+    }
+
     // update any movement to planet particle
     this.particle.update();
 
@@ -83,6 +93,22 @@ var planet = {
       }
     }
   },
+
+  wrapborder : function(){
+    if (this.particle.position.getX() > this.boundary.xmax){
+      this.particle.position.setX(this.boundary.xmin);
+    }
+    if (this.particle.position.getX() < this.boundary.xmin){
+      this.particle.position.setX(this.boundary.xmax);
+    }
+    if (this.particle.position.getY() > this.boundary.ymax){
+      this.particle.position.setY(this.boundary.ymin);
+    }
+    if (this.particle.position.getY() < this.boundary.ymin){
+      this.particle.position.setY(this.boundary.ymax);
+    }
+  },
+
 
   draw: function(context){
     //draw planet
