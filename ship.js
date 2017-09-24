@@ -177,7 +177,7 @@ var ship = {
   },
 
   draw: function(context){
-    var s = 5;//scalar
+    var s = 2;//scalar
     //draw ship outline
     context.save();
     context.translate(this.particle.position.getX(),
@@ -188,20 +188,10 @@ var ship = {
 
     //wings
     context.moveTo(s*10, 0);
-    context.lineTo(s*-11, s*-6);
-    context.lineTo(s*-11, s*6);
-    context.lineTo(s*10, 0);
-    
-    context.moveTo(s*10, 0);
-    context.lineTo(s*-10, s*-4);
-    context.lineTo(s*-10, s*4);
+    context.lineTo(s*-10, s*-6);
+    context.lineTo(s*-10, s*6);
     context.lineTo(s*10, 0);
     context.fill();
-    
-    context.moveTo(s*10, 0);
-    context.lineTo(s*-10, s*-3);
-    context.lineTo(s*-10, s*3);
-    context.lineTo(s*10, 0);
     
 
     //fuselouge
@@ -214,12 +204,12 @@ var ship = {
     if(this.thruster.on) {
       context.beginPath();
       context.fillStyle = pallete.Orange;
-      context.moveTo(-10, 0);
-      context.lineTo(-18, -2);
-      context.lineTo(-20, 0);
-      context.moveTo(-10, 0);
-      context.lineTo(-18, 2);
-      context.lineTo(-20, 0);
+      context.moveTo(s*-10, 0);
+      context.lineTo(s*-18, s*-2);
+      context.lineTo(s*-20, 0);
+      context.moveTo(s*-10, 0);
+      context.lineTo(s*-18, s*2);
+      context.lineTo(s*-20, 0);
       context.fill();
       context.stroke();
     }
