@@ -1,5 +1,5 @@
 window.onload = function(){
-  var level = 0;
+  var level = 1;
   var score = 0;
   var hud = document.getElementById("hud");
   //----------------------------------------------

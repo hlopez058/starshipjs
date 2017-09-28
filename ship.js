@@ -8,6 +8,8 @@ var ship = {
   blasts:null,
   boundary:null,
   exploded:null,
+  rotate_speed:0.05,
+  thrust_speed:0.02,
   hp:0,
   thruster:{on:false,left:false,right:false},
   weapon:{release:false,
@@ -131,10 +133,10 @@ var ship = {
   update: function(){
 
     if(this.thruster.left){
-      this.particle.rotate(-0.05);
+      this.particle.rotate(-this.rotate_speed);
     }
     if(this.thruster.right){
-      this.particle.rotate(0.05);
+      this.particle.rotate(this.rotate_speed);
     }
     
     if(this.weapon.release){
@@ -161,7 +163,7 @@ var ship = {
     thrust.setAngle(this.particle.rotation);
 
     if(this.thruster.on){
-      thrust.setLength(0.1);
+      thrust.setLength(this.thrust_speed);
     }else{
       thrust.setLength(0.0);
     }
