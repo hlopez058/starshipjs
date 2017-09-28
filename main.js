@@ -1,5 +1,5 @@
 window.onload = function(){
-  var level = 3;
+  var level = 0;
   var score = 0;
   var hud = document.getElementById("hud");
   //----------------------------------------------
@@ -24,49 +24,7 @@ window.onload = function(){
   //----------------------------------------------
   // Animation : Pre-Render
   //----------------------------------------------
-
-  var bodies =[];
-  for(var k=0 ; k<level*10 ; k++)
-  {
-    var posx = getRandomIntInclusive(-width/2,width/2);
-    var posy = getRandomIntInclusive(-height/2,height/2);
-    
-    var sz = getRandomIntInclusive(5,40);
-    var ms = getRandomIntInclusive(1,20);
-    var col = getRandomIntInclusive(1,10);
-    var lor = pallete.Gray;    
-    switch(col){
-      case 1: lor = pallete.Blue;break;
-      case 2: lor = pallete.DarkCyan;break;
-      case 3: lor = pallete.DarkBlue;break;
-      case 4: lor = pallete.Green;break;
-      case 5: lor = pallete.Maroon;break;
-      case 6: lor = pallete.Brown;break;
-      case 7: lor = pallete.Chocolate;break;
-      case 8: lor = pallete.Tomato;break;
-      case 9: lor = pallete.SeaGreen;break;
-      case 10: lor = pallete.Orange;break;
-      default: pallete.Gray;
-    }
-
-    var body = planet.create(
-      boundary,
-      center.x + posx,
-      center.y +posy,
-      sz,
-      ms,
-      lor
-    );
-
-    
-    var orbit = vector.create(0,0);
-    orbit.setLength(getRandomFloatInclusive(.1,.7));
-    orbit.setAngle(getRandomFloatInclusive(1,2*Math.PI));
-    body.particle.accelerate(orbit);
-
-
-    bodies[k] = body;
-  }
+ var bodies = GenerateCelestialBodies(); 
 
   var starship = ship.create(boundary,
                             center.x,
@@ -87,7 +45,7 @@ window.onload = function(){
 
      // Background 
     context.beginPath();
-    context.fillStyle = pallete.Black;
+    context.fillStyle = pallete.White;
     context.moveTo(0, 0);
     context.lineTo(width, 0);
     context.lineTo(width, height);
@@ -138,4 +96,51 @@ window.onload = function(){
     requestAnimationFrame(update);
   }
 
+  function GenerateCelestialBodies(){
+    var bodies =[];
+    for(var k=0 ; k<level*4 ; k++)
+    {
+      var posx = getRandomIntInclusive(-width/2,width/2);
+      var posy = getRandomIntInclusive(-height/2,height/2);
+      
+      var sz = getRandomIntInclusive(5,40);
+      var ms = getRandomIntInclusive(1,20);
+      var col = getRandomIntInclusive(1,10);
+      var lor = pallete.Gray;    
+      switch(col){
+        case 1: lor = pallete.Blue;break;
+        case 2: lor = pallete.DarkCyan;break;
+        case 3: lor = pallete.DarkBlue;break;
+        case 4: lor = pallete.Green;break;
+        case 5: lor = pallete.Maroon;break;
+        case 6: lor = pallete.Brown;break;
+        case 7: lor = pallete.Chocolate;break;
+        case 8: lor = pallete.Tomato;break;
+        case 9: lor = pallete.SeaGreen;break;
+        case 10: lor = pallete.Orange;break;
+        default: pallete.Gray;
+      }
+  
+      var body = planet.create(
+        boundary,
+        center.x + posx,
+        center.y +posy,
+        sz,
+        ms,
+        lor
+      );
+  
+      
+      var orbit = vector.create(0,0);
+      orbit.setLength(getRandomFloatInclusive(.1,.7));
+      orbit.setAngle(getRandomFloatInclusive(1,2*Math.PI));
+      body.particle.accelerate(orbit);
+  
+  
+      bodies[k] = body;
+    } 
+    return bodies;   
+  }
 }
+
+

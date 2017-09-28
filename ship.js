@@ -10,13 +10,16 @@ var ship = {
   exploded:null,
   hp:0,
   thruster:{on:false,left:false,right:false},
-  weapon:{trigger:false,
+  weapon:{release:false,
+          charge:0.01,
+          charging:false,
+          trigger:false,
           fired:[],
           max_ammo:100,
           ammo:0,
           rate_of_fire:9,
           cooldown:0,
-          bullet_size:3,
+          bullet_size:5,
           bullet_mass:1,
           bullet_color:pallete.Red,
           bullet_speed:5,
@@ -29,6 +32,8 @@ var ship = {
               this.cooldown = this.rate_of_fire;
               //fire bullet
               if(this.fired.length < this.max_ammo){
+                //scale bullet
+                var bsize = this.bullet_size * this.charge;
                 //create a new bullet and add to fired
                 //bounds,x,y,speed,direction,size,mass,color
                 var b = bullet
@@ -79,7 +84,23 @@ var ship = {
     this.thruster.on = controller.keyUp;
     this.thruster.left = controller.keyLeft;
     this.thruster.right = controller.keyRight;
+
+
     this.weapon.trigger = controller.keySpace;
+
+    if(this.weapon.trigger){
+      this.weapon.charging = true;
+    }
+
+    if(this.weapon.trigger && this.weapon.charging){
+      this.weapon.release = false;
+    }
+
+    if(this.weapon.charging && !this.weapon.trigger){
+      this.weapon.release = true;
+      this.weapon.charging =false;
+    }
+
   },
 
   setHP: function(val){
@@ -116,7 +137,7 @@ var ship = {
       this.particle.rotate(0.05);
     }
     
-    if(this.weapon.trigger){
+    if(this.weapon.release){
       this.weapon.fire(
         this.boundary,
         this.particle.position.getX(),
@@ -124,6 +145,16 @@ var ship = {
         this.particle.rotation
       );
     }
+
+    if(this.weapon.charging){
+      if(this.weapon.charge<1){
+      this.weapon.charge = this.weapon.charge+0.01;}
+    }else{
+      this.weapon.charge = 0.01;
+    }
+
+
+
     //create a thrust vector
     var thrust = vector.create(this.particle.position.getX(),
                               this.particle.position.getY());
@@ -177,43 +208,10 @@ var ship = {
   },
 
   draw: function(context){
-    var s = 2;//scalar
-    //draw ship outline
-    context.save();
-    context.translate(this.particle.position.getX(),
-                        this.particle.position.getY());
-    context.rotate(this.particle.rotation);
-    context.beginPath();
-    context.fillStyle = pallete.Gray;
+    var s = 5;//scalar
 
-    //wings
-    context.moveTo(s*10, 0);
-    context.lineTo(s*-10, s*-6);
-    context.lineTo(s*-10, s*6);
-    context.lineTo(s*10, 0);
-    context.fill();
-    
 
-    //fuselouge
-    context.moveTo(s*-10,0);
-    context.lineTo(s*10, 0);
-    
-    context.fill();
-    context.stroke();
-    
-    if(this.thruster.on) {
-      context.beginPath();
-      context.fillStyle = pallete.Orange;
-      context.moveTo(s*-10, 0);
-      context.lineTo(s*-18, s*-2);
-      context.lineTo(s*-20, 0);
-      context.moveTo(s*-10, 0);
-      context.lineTo(s*-18, s*2);
-      context.lineTo(s*-20, 0);
-      context.fill();
-      context.stroke();
-    }
-    context.restore();
+    drawShip(context,this.particle,s,this.thruster.on);
 
     //draw any bullets fired
     if(this.weapon.fired.length>0){

@@ -33,17 +33,100 @@ function drawShip(context,particle,size,flag){
   context.translate(particle.position.getX(),
                       particle.position.getY());
   context.rotate(particle.rotation);
-  context.beginPath();
-  context.fillStyle = particle.color;
 
-  context.moveTo(10, 0);
-  context.lineTo(-10, -7);
-  context.lineTo(-10, 7);
-  context.lineTo(10, 0);
+
+  //Thrusters
   if(flag) {
-    context.moveTo(-10, 0);
-    context.lineTo(-18, 0);
-  }
+
+    context.beginPath();
+    context.strokeStyle = pallete.Bisque;
+    context.moveTo(size*-9, size*2.25);
+    context.lineTo(size*-7, size*1.25);
+    context.lineTo(size*-7, size*3.25);
+    context.lineTo(size*-9, size*2.25);
+    context.moveTo(size*-9, size*-2.25);
+    context.lineTo(size*-7, size*-1.25);
+    context.lineTo(size*-7, size*-3.25);
+    context.lineTo(size*-9, size*-2.25);
+    context.stroke();
+
+    context.lineWidth = (size*.25);    
+    context.beginPath();
+    context.strokeStyle = pallete.AlmondPink;
+    context.moveTo(size*-8, size*2.25);
+    context.lineTo(size*-6, size*1.25);
+    context.lineTo(size*-6, size*3.25);
+    context.lineTo(size*-8, size*2.25);
+    context.moveTo(size*-8, size*-2.25);
+    context.lineTo(size*-6, size*-1.25);
+    context.lineTo(size*-6, size*-3.25);
+    context.lineTo(size*-8, size*-2.25);
+    context.stroke();
+    context.beginPath();
+    context.fillStyle = pallete.White;
+    context.strokeStyle = pallete.SkylineBlue;
+    context.moveTo(size*-7, size*2.25);
+    context.lineTo(size*-5, size*1.25);
+    context.lineTo(size*-5, size*3.25);
+    context.lineTo(size*-7, size*2.25);
+    context.moveTo(size*-7, size*-2.25);
+    context.lineTo(size*-5, size*-1.25);
+    context.lineTo(size*-5, size*-3.25);
+    context.lineTo(size*-7, size*-2.25);
+    context.fill();    
+    context.stroke();
+     }
+
+
+  context.beginPath();
+  context.strokeStyle = pallete.Black;
+  context.lineWidth = (size*.25);
+  context.moveTo(size*5, 0);
+  context.lineTo(size*-5, size*-3.5);
+  context.lineTo(size*-5, size*3.5);
+  context.lineTo(size*5, 0);
   context.stroke();
+  
+  context.beginPath();  
+  context.fillStyle = pallete.White;
+  context.moveTo(size*5, 0);
+  context.lineTo(size*-5, size*-3.5);
+  context.lineTo(size*-5, size*3.5);
+  context.lineTo(size*5, 0);
+  context.fill();
+
+  context.beginPath();
+  //context.fillStyle = particle.color;
+  context.fillStyle = pallete.DarkDarkGrey;
+  context.moveTo(size*3.7, 0);
+  context.lineTo(size*-3.7, size*-2.6);
+  context.lineTo(size*-3.7, size*2.6);
+  context.lineTo(size*3.7, 0);
+  context.fill();
+
+  context.beginPath();
+  context.strokeStyle = pallete.Black;
+  context.moveTo(size*3.7, 0);
+  context.lineTo(size*-3.7, size*-2.6);
+  context.lineTo(size*-3.7, size*2.6);
+  context.lineTo(size*3.7, 0);
+  context.stroke();
+
+  context.beginPath();
+  context.fillStyle = pallete.White;
+  context.moveTo(size*2.6,0);
+  context.lineTo(size*-2.6, size*-1.82);
+  context.lineTo(size*-2.6, size*1.82);
+  context.lineTo(size*2.6, 0);
+  context.fill();
+
+  context.beginPath();
+  context.strokeStyle = pallete.Black;
+  context.moveTo(size*2.6,0);
+  context.lineTo(size*-2.6, size*-1.82);
+  context.lineTo(size*-2.6, size*1.82);
+  context.lineTo(size*2.6, 0);
+  context.stroke();
+
   context.restore();
 }
