@@ -1,5 +1,5 @@
 window.onload = function(){
-  var level = 1;
+  var level = 2;
   var score = 0;
   var hud = document.getElementById("hud");
   //----------------------------------------------
@@ -19,13 +19,11 @@ window.onload = function(){
                     keyLeft:false,
                     keyRight:false,
                     keySpace:false};
-  
   controller = BindKeyboard(controller);  
   //----------------------------------------------
   // Animation : Pre-Render
   //----------------------------------------------
- var bodies = GenerateCelestialBodies(); 
-
+  var bodies = GenerateCelestialBodies(); 
   var starship = ship.create(boundary,
                             center.x,
                             center.y-100,
@@ -35,66 +33,112 @@ window.onload = function(){
                           );
   starship.setHP(100);
 
- 
+  /*
+   frebodies should be a class that hodls each of the 
+   physics within the class. 
+   The art layer on the body should be seperate from its physics?
+
+   crete a body class- 
+   build a multilayer object?
+   
+   object with two classes
+   
+   
+   main body object
+    Updates will update interaction and visualizations?
+      - interaction
+       -physics and space itneraction
+      - visualization
+       - draw class and displays
+
+  */
+
   //----------------------------------------------
   //FRAME UPDATE CALL
   update();
+
   //FRAME UPDATE DEFINED
   function update(){
+    //-----------------------
+    // Decorate Canvas
+    //-----------------------
     context.clearRect(0,0,width,height);
-
-     // Background 
-    context.beginPath();
-    context.fillStyle = pallete.White;
-    context.moveTo(0, 0);
-    context.lineTo(width, 0);
-    context.lineTo(width, height);
-    context.lineTo(0, height);
-    context.fill();
-    context.stroke();
+   
+    DrawBackground();
     
     //-----------------------
     // Game State Update
     //-----------------------
-    hud.innerHTML="HP:"+starship.hp + " Ammo:"+starship.weapon.ammo + " Points:" + score;
+    hud.innerHTML=
+    " HP:"+ starship.hp + 
+    " Ammo:"+ starship.weapon.ammo + 
+    " Points:" + score;
 
     //-----------------------
-    // Animiation : Render
+    // Draw Sprites
     //-----------------------
-
-    for(var i=0;i<bodies.length;i++){
+ 
+    var blength = bodies.length;
+    for(var i=0;i<blength;i++){
+  
+      //update movement      
       bodies[i].update();
+
+      //draw states
       context = bodies[i].draw(context);
-    }
 
-    for(var i=0;i<(bodies.length/2);i++){
-      for(var k=(bodies.length/2);k<bodies.length;k++)
-      {   
-        bodies[i].particle.gravitateTo(bodies[k].particle); 
+      //apply forces
+      for(var k=0; k>bodies.length; k++){
+        if(k!=i){
+        bodies[i].particle.gravitateTo(bodies[k].particle);        
+        }     
+      }      
+    
+      //test collisions
+      for(var k=0; k<bodies.length; k++){
+        if(k!=i){
+        var hit = bodies[i].hittest(bodies[k].particle);
+        if(hit){
+          
+          bodies[i].explode(bodies[k].particle); 
+        }
       }
-   }
-
-    starship.control(controller);
-    starship.update();
-    context = starship.draw(context);
-
-    //collision testing for bullets
-    for(var k=0;k<starship.weapon.fired.length;k++)
-    {
-      for(var i=0;i<bodies.length;i++)
+      }    
+      
+      for(var k=0;k<starship.weapon.fired.length;k++)
       {
-        if(!bodies[i].exploded){
         if(bodies[i].hittest(starship.weapon.fired[k].particle))
         {
-          bodies[i].explode();
+          bodies[i].explode(starship.weapon.fired[k].particle);
           score++;
-        }}
-      }       
+        }  
+      }    
+      
+      //add new bodies
+      for(var k=bodies[i].fragments.length; k>0; k--){
+        bodies.push(bodies[i].fragments[k]);
+        bodies[i].fragments.pop();             
+      }
+    
+  
     }
-   
+
     //-----------------------
+    // Draw Ship
+    //-----------------------
+    starship.control(controller);
+
+    starship.update();
+
+    context = starship.draw(context);
+
+    DrawControlHub();
+
+    //-----------------------
+
     requestAnimationFrame(update);
   }
+
 
   function GenerateCelestialBodies(){
     var bodies =[];
@@ -106,7 +150,9 @@ window.onload = function(){
       var sz = getRandomIntInclusive(5,40);
       var ms = getRandomIntInclusive(1,20);
       var col = getRandomIntInclusive(1,10);
+
       var lor = pallete.Gray;    
+
       switch(col){
         case 1: lor = pallete.Blue;break;
         case 2: lor = pallete.DarkCyan;break;
@@ -140,6 +186,40 @@ window.onload = function(){
       bodies[k] = body;
     } 
     return bodies;   
+  }
+
+  function DrawBackground(){
+    // Background 
+    context.beginPath();
+    context.strokeStyle =  pallete.Black;
+    context.fillStyle = pallete.White;
+    context.moveTo(0, 0);
+    context.lineTo(width, 0);
+    context.lineTo(width, height);
+    context.lineTo(0, height);
+    context.fill();
+    context.stroke();
+    
+  }
+
+  function DrawControlHub(){
+  // Controller Cirlce 
+  context.beginPath();
+  context.fillStyle = pallete.White;
+  context.arc(100,100,50,0,2*Math.PI);
+  context.fill();
+
+  context.beginPath();
+  context.strokeStyle = pallete.Black;
+  context.arc(100,100,50,0,2*Math.PI);
+  context.arc(100,100,40,0,2*Math.PI);
+  context.arc(100,100,44,0,2*Math.PI);
+  context.stroke();
+
+  context.beginPath();
+  context.strokeStyle = pallete.Blue;
+  context.arc(100,100,45,0,2*Math.PI);
+  context.stroke();
   }
 }
 

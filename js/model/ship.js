@@ -86,23 +86,7 @@ var ship = {
     this.thruster.on = controller.keyUp;
     this.thruster.left = controller.keyLeft;
     this.thruster.right = controller.keyRight;
-
-
     this.weapon.trigger = controller.keySpace;
-
-    if(this.weapon.trigger){
-      this.weapon.charging = true;
-    }
-
-    if(this.weapon.trigger && this.weapon.charging){
-      this.weapon.release = false;
-    }
-
-    if(this.weapon.charging && !this.weapon.trigger){
-      this.weapon.release = true;
-      this.weapon.charging =false;
-    }
-
   },
 
   setHP: function(val){
@@ -135,11 +119,12 @@ var ship = {
     if(this.thruster.left){
       this.particle.rotate(-this.rotate_speed);
     }
+
     if(this.thruster.right){
       this.particle.rotate(this.rotate_speed);
     }
     
-    if(this.weapon.release){
+    if(this.weapon.trigger){
       this.weapon.fire(
         this.boundary,
         this.particle.position.getX(),
@@ -148,14 +133,13 @@ var ship = {
       );
     }
 
-    if(this.weapon.charging){
+    /*if(this.weapon.charging){
       if(this.weapon.charge<1){
-      this.weapon.charge = this.weapon.charge+0.01;}
+        this.weapon.charge = this.weapon.charge+0.01;
+      }
     }else{
       this.weapon.charge = 0.01;
-    }
-
-
+    }*/
 
     //create a thrust vector
     var thrust = vector.create(this.particle.position.getX(),
@@ -211,7 +195,6 @@ var ship = {
 
   draw: function(context){
     var s = 5;//scalar
-
 
     drawShip(context,this.particle,s,this.thruster.on);
 

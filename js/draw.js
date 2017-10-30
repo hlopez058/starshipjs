@@ -15,7 +15,6 @@ function drawPlanet(context,planet,size){
 }
 
 function drawBullets(context,weapon,size){
-
     for(i=0; i<weapon.fired_cntr; i++){
       context.beginPath();
       context.fillStyle = "#000000";
