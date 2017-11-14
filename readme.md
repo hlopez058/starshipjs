@@ -5,6 +5,6 @@ A Javascript program that uses vector physics to create a spaceship shooter.
 Still a work in progress. I am hoping to clear up the file structure and create amore intuitive object instantiation. Currently collision tracking is my biggest issue. I am trying to track all the collisions and still dispose of objects off screen. 
 
 
-![alt text](screenshot1.png "screenshot v1.0")
-![alt text](screenshot2.png "screenshot v1.0")
+![alt text](screenshot1.PNG "screenshot v1.0")
+![alt text](screenshot2.PNG "screenshot v1.0")
 

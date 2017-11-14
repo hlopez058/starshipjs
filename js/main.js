@@ -70,7 +70,7 @@ window.onload = function(){
     // Game State Update
     //-----------------------
     hud.innerHTML=
-    "<h1> StarShip </h1>"
+    "<h1> Star Ship </h1>"
     " HP:"+ starship.hp + 
     " Ammo:"+ starship.weapon.ammo + 
     " Points:" + score;
