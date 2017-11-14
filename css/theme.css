@@ -1,5 +1,7 @@
 html,body{
     margin: 0px;
+    font-family: 'Syncopate';
+    font-family: 'Josefin Sans';
 }
 canvas {
   display:block;
