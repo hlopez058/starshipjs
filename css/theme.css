@@ -1,7 +1,10 @@
 html,body{
     margin: 0px;
-    font-family: 'Syncopate';
+  
     font-family: 'Josefin Sans';
+}
+h1 {
+  font-family: 'Syncopate';
 }
 canvas {
   display:block;
