@@ -9,7 +9,7 @@ var ship = {
   boundary:null,
   exploded:null,
   rotate_speed:0.05,
-  thrust_speed:0.02,
+  thrust_speed:0.08,
   hp:0,
   thruster:{on:false,left:false,right:false},
   weapon:{release:false,

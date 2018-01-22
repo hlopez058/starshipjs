@@ -33,6 +33,8 @@ window.onload = function(){
                           );
   starship.setHP(100);
 
+
+
   /*
    frebodies should be a class that hodls each of the 
    physics within the class. 
@@ -116,10 +118,10 @@ window.onload = function(){
       }    
       
       //add new bodies
-      for(var k=bodies[i].fragments.length; k>0; k--){
-        bodies.push(bodies[i].fragments[k]);
-        bodies[i].fragments.pop();             
-      }
+      //for(var k=bodies[i].fragments.length; k>0; k--){
+      //  bodies.push(bodies[i].fragments[k]);
+      //  bodies[i].fragments.pop();             
+      //}
     
   
     }
